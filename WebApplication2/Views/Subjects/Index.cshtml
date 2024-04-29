@@ -1,0 +1,118 @@
+﻿@model IEnumerable<WebApplication2.Models.Subject>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enable)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Enable)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Sub_code }, new { @class = "edit-link" }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Sub_code }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Sub_code })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                <!-- Edit form will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">Student Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detailsModalBody">
+                <!-- Details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).on("click", ".edit-link", function (e) {
+        e.preventDefault();
+
+        var url = $(this).attr("href");
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure you want to edit?',
+            text: 'This will open the edit form.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, edit it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, load the edit form
+                $.get(url, function (data) {
+                    $("#editModalBody").html(data);
+                    $("#editModal").modal("show");
+                });
+            }
+        });
+    });
+
+
+    $(document).on("click", ".details-link", function (e) {
+        e.preventDefault();
+        var url = $(this).attr("href");
+        $.get(url, function (data) {
+            $("#detailsModalBody").html(data);
+            $("#detailsModal").modal("show");
+        });
+    });
+
+
+</script>
+
+</body>
+</html>
+
